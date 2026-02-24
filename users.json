@@ -1,0 +1,32 @@
+import json
+
+def load_users():
+    try:
+        with open("users.json", "r") as f:
+            return json.load(f)
+    except:
+        return {}
+
+users = load_users()
+
+if not st.session_state.logged_in:
+
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
+
+    if st.button("Login"):
+        if username in users and users[username] == password:
+            st.session_state.logged_in = True
+            st.session_state.username = username
+            st.success("Login Successful")
+            st.rerun()
+        else:
+            st.error("Invalid Credentials")
+
+else:
+    st.success(f"Welcome {st.session_state.username}")
+
+    if st.button("Logout"):
+        st.session_state.logged_in = False
+        st.session_state.username = ""
+        st.rerun()
